@@ -1,0 +1,35 @@
+import java.util.HashMap;
+import java.util.Map;
+public class courseArrange {
+    public static void main(String[] args) {
+//作业解答 实训一
+//适用Map实现的student的增删改查
+        class Student{ String id; String name; int age; String major;
+
+            public Student(String id, String name, int age, String major){
+                this.id = id;
+                this.name = name;
+                this.age = age;
+                this.major = major;
+            }
+
+            public String toString(){
+                return "id: " + id + " name: " + name + " age: " + age + " major: " + major;
+            }
+        }
+        Map<String,Student> students=new HashMap<String,Student>();
+        Student s1=new Student("2018001","Mark",20,"SE");
+        Student s2=new Student("2018002","Judy",18,"CS");
+        students.put("2018001",s1);
+        students.put("2018002",s2);
+        Student s3=new Student("2018002","Lily",19,"AI");
+        students.put("2018003",s3 );
+        students.remove("2018001");
+        students.put("2018002", new Student("2018002","Judy",18,"CS"));
+        for (String s : students.keySet()) {
+            if(students.get(s).name.equals("Lily")) {
+                System.out.println(students.get(s).toString());
+            }
+        }
+    }
+}
