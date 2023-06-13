@@ -1,0 +1,56 @@
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+public class Cart { // 存放商品信息和数量
+    Map <Commodity, Integer> commodityMap;
+    BigDecimal totalPrice = BigDecimal.valueOf(0.0);
+    public Cart() {
+        commodityMap = new HashMap<>();
+    }
+
+    // 向购物车中添加商品
+    public void add(Commodity commodity, int num) {
+        if (commodityMap.containsKey(commodity)) {
+            // 取得之前购物车中的商品数量
+            int previousNum = commodityMap.get(commodity);
+            // 更新购物车商品数量
+            commodityMap.put(commodity, previousNum + num);
+        } else {
+            // 直接添加
+            commodityMap.put(commodity, num);
+        }
+        // 更新总价
+        totalPrice = totalPrice.add(commodity.getPrice().multiply(BigDecimal.valueOf(num)));
+    }
+
+    public void remove(Commodity commodity, int num) {
+        // 获取购物车中的商品数量
+        int previousNum = commodityMap.getOrDefault(commodity, 0);
+        int removedNum = Math.min(previousNum, num);
+        commodityMap.put(commodity, previousNum - removedNum);
+
+        // 如果移除商品之后数量小于等于0, 将该商品从购物车中移除
+        if (commodityMap.get(commodity) <= 0) {
+            commodityMap.remove(commodity);
+        }
+
+        // 计算商品移除后的总价并更新totalPrice
+        BigDecimal priceToRemove = commodity.getPrice().multiply(BigDecimal.valueOf(removedNum));
+        totalPrice = totalPrice.subtract(priceToRemove);
+    }
+
+    public void print() {
+        System.out.println("-------------购物车商品清单------------\r " + "商品编号\t商品名称\t单价\t数量\t小计");
+        System.out.println("No.\tName\tPrice\tMount\tsubTotal");
+        int index = 1;
+        for (Map.Entry<Commodity, Integer> entry : commodityMap.entrySet()) {
+            Commodity commodity = entry.getKey();
+            int num = entry.getValue();
+            System.out.println(index + "\t" + commodity.getName() + "\t" +
+                    commodity.getPrice() + "\t" + num + "\t" +
+                    commodity.getPrice().multiply(BigDecimal.valueOf(num)));
+            index++;
+        }
+        System.out.println("\r-------------总价：" + totalPrice);
+    }
+}
