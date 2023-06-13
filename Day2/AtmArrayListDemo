@@ -1,0 +1,109 @@
+import java.util.ArrayList;
+
+import java.util.Scanner;
+public class AtmArrayListDemo {
+
+    static ArrayList<Account> accounts=new ArrayList<>();
+    public static void initAccounts() {
+        accounts.add(new Account("0001", "Mark", "1234", 2345.7));
+        accounts.add(new Account("0002", "Piggie", "1234", 8560.0));
+        accounts.add(new Account("0003", "Judy", "1234", 7788.0));
+        accounts.add(new Account("0004", "Jack", "1234", 200.0));
+    }
+
+    public static String checkin(String userName, String pasWord) {
+        for (Account account : accounts) {
+            if (account.getUserName().equals(userName) && account.getPassword().equals(pasWord)) {
+                return account.getAccountID();
+            }
+        }
+        return null;
+    }
+
+    public static void Deposit(String accountID, double amount) {
+        for (Account account : accounts) {
+            if (account.getAccountID().equals(accountID)) {
+                account.setBalance(account.getBalance() + amount);
+            }
+        }
+    }
+
+    public static boolean WithDraw(String accountID, double amount) {
+        for (Account account : accounts) {
+            if (account.getAccountID().equals(accountID)) {
+                if (account.getBalance() >= amount) {
+                    account.setBalance(account.getBalance() - amount);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static double Query(String accountID) {
+        for (Account account : accounts) {
+            if (account.getAccountID().equals(accountID)) {
+                return account.getBalance();
+            }
+        }
+        return 0.0;
+    }
+
+
+    public static void main(String[] args) {
+        initAccounts();
+        Scanner s = new Scanner(System.in);
+        System.out.println("请输入账号名称：");
+        String accountName = s.next();
+        System.out.println("请输入账号密码：");
+        String pasWord = s.next();
+        String accountID = checkin(accountName, pasWord);
+        while (true) {
+            System.out.println("--欢迎使用SHBank ATM机--");
+            System.out.println(" **** 1.查询余额 ****");
+            System.out.println(" **** 2.存款 ****");
+            System.out.println(" **** 3.取款 ****");
+            System.out.println(" **** 0.退卡 ****");
+            System.out.println("");
+            System.out.println("请选择您需要的操作：");
+            int choice = s.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("请输入账号名称：");
+                    double balance = Query(accountID);
+                    System.out.println("请稍等，正在为您查询中......");
+                    System.out.println("账号的余额为: " + balance);
+                    break;
+                case 2:
+                    System.out.println("请稍等，正在为您存款中......");
+                    System.out.println("需要存多少钱呢？亲：");
+                    double in = s.nextDouble();
+                    System.out.println("请稍等，正在为您存款中......");
+                    Deposit(accountID, in);
+                    balance = Query(accountID);
+                    System.out.println("存款成功，账号的余额为: " + balance);
+                    break;
+                case 3:
+                    System.out.println("请稍等，正在为您取款中......");
+                    System.out.println("需要取多少钱呢？亲：");
+                    in = s.nextDouble();
+                    WithDraw(accountID, in);
+                    balance = Query(accountID);
+                    if (balance - in >= 0) {
+                        System.out.println("取款成功，账号的余额为: " + balance);
+                    } else {
+                        System.out.println("您的金额不足！");
+                    }
+                    break;
+                case 0:
+                    System.out.println("谢谢使用," + accountName + "请取出您的银行卡");
+                    return;
+                default:
+                    System.out.println("您的输入有误，请重新输入：");
+                    break;
+            }
+        }
+    }
+}
